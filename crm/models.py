@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -71,7 +71,7 @@ class FollowUpRecord(models.Model):
 
 
 class Course(models.Model):
-    name = models.CharField(unique=True)
+    name = models.CharField(unique=True, max_length=64)
     price = models.PositiveIntegerField(default=19800)
     outline = models.TextField()
 
@@ -86,6 +86,7 @@ class ClassList(models.Model):
                   (1, '周末'),
                   (2, '网络'),
                   )
+    branch = models.ForeignKey("Branch")
     class_type = models.PositiveIntegerField(choices=class_type_choice)
     teachers = models.ManyToManyField("UserProfile")
     start_date = models.DateField()
@@ -144,7 +145,13 @@ class StudyRecord(models.Model):
 
 
 class UserProfile(models.Model):
-    pass
+    user = models.OneToOneField(User)
+    name = models.CharField(max_length=32)
+
+    roles = models.ManyToManyField("Role", blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Role(models.Model):
@@ -153,17 +160,22 @@ class Role(models.Model):
     menus = models.ManyToManyField("Menu")
 
     def __str__(self):
-        
+        return self.name
 
 
 class Branch(models.Model):
     """分校"""
     name = models.CharField(unique=True, max_length=128)
 
+    def __str__(self):
+        return self.name
+
 
 class Menu(models.Model):
     """动态菜单"""
     name = models.CharField(unique=True, max_length=32)
     url_type = models.SmallIntegerField(choices=((0, 'relative_name'), (1, 'absolute_url')))
-    url_name = models.CharField(unique=True)
+    url_name = models.CharField(unique=True, max_length=128)
 
+    def __str__(self):
+        return self.name

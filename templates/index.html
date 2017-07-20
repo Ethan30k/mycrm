@@ -17,7 +17,17 @@
             <li><a href="http://v3.bootcss.com/examples/dashboard/#">Dashboard</a></li>
             <li><a href="http://v3.bootcss.com/examples/dashboard/#">Settings</a></li>
             <li><a href="http://v3.bootcss.com/examples/dashboard/#">Profile</a></li>
-            <li><a href="http://v3.bootcss.com/examples/dashboard/#">Help</a></li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{ request.user.userprofile.name }} <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/logout/">logout</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+
+              </ul>
+            </li>
+
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -31,10 +41,16 @@
           {% block side-bar %}
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="http://v3.bootcss.com/examples/dashboard/#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="http://v3.bootcss.com/examples/dashboard/#">Reports</a></li>
-            <li><a href="http://v3.bootcss.com/examples/dashboard/#">Analytics</a></li>
-            <li><a href="http://v3.bootcss.com/examples/dashboard/#">Export</a></li>
+              {% block side-bar-menus %}
+                  {% for role in request.user.userprofile.roles.all %}
+{#            <li class="active"><a href="http://v3.bootcss.com/examples/dashboard/#">Overview <span class="sr-only">(current)</span></a></li>#}
+{#            <li><a href="http://v3.bootcss.com/examples/dashboard/#">{{ role }}</a></li>#}
+                <hr>
+                {% for menu in role.menus.all %}
+                    <li><a href="{% if menu.url_type == 0  %}{% url 'sales_dashboard' %}{% else %}{% menu.url_name %}{% endif %}">{{ menu.name }}</a></li>
+                {% endfor %}
+              {% endfor %}
+              {% endblock %}
           </ul>
 
         </div>

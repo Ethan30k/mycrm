@@ -4,8 +4,19 @@ from crm import models
 # Register your models here.
 
 
-admin.site.register(models.Customer)
-admin.site.register(models.FollowUpRecord)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'qq', 'consultant', 'source', 'consult_content', 'status', 'date')
+    list_filter = ('source', 'status', 'consultant')
+    search_fields = ('qq', 'name')
+    list_editable = ('status',)
+
+
+class CustomerFollowUPAdmin(admin.ModelAdmin):
+    list_display = ('customer', 'content', 'status', 'consultant', 'date')
+
+
+admin.site.register(models.Customer, CustomerAdmin)
+admin.site.register(models.FollowUpRecord, CustomerFollowUPAdmin)
 admin.site.register(models.Enrollment)
 admin.site.register(models.Course)
 admin.site.register(models.ClassList)

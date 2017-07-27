@@ -37,6 +37,10 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "客户信息表"
+        verbose_name = "客户信息表"
+
 
 class Enrollment(models.Model):
     """学员报名信息"""
@@ -67,7 +71,7 @@ class FollowUpRecord(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.customer
+        return "%s" % self.customer
 
 
 class Course(models.Model):
@@ -93,7 +97,7 @@ class ClassList(models.Model):
     end_date = models.DateField()
 
     def __str__(self):
-        return self.course
+        return "%s" % self.course
 
 
 class CourseRecord(models.Model):
@@ -107,7 +111,7 @@ class CourseRecord(models.Model):
     homework_requirement = models.TextField(verbose_name="作业需求", max_length=1024, blank=True, null=True)
 
     def __str__(self):
-        return "%s daynum:%s" % (self.class_grade, self.day_number)
+        return "daynum:%s" % (self.day_number)
 
     class Meta:
         unique_together = ("class_grade", "day_number")
@@ -151,7 +155,7 @@ class UserProfile(models.Model):
     roles = models.ManyToManyField("Role", blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return "%s" % self.name
 
 
 class Role(models.Model):

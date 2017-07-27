@@ -1,0 +1,39 @@
+{% extends 'freeadmin/index.html' %}
+{% load freeadmin_tags  %}
+
+{% block right-container-content %}
+    <h4>{% get_model_verbose_name admin_obj.model %}</h4>
+
+    {% if admin_obj.list_filter %}
+        <div class="row">
+        <form>
+            {% for filter_column in admin_obj.list_filter %}
+                <div class="col-lg-2">
+                    {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
+                </div>
+            {% endfor %}
+        <input type="submit" class="btn btn-success" value="过滤">
+        </form>
+        </div>
+    {% endif %}
+
+
+    <table class="table table-hover">
+    <thead>
+        <tr>
+            {% for column in admin_obj.list_display %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+      <tbody>
+
+        {% for obj in admin_obj.querysets %}
+            <tr>
+                {% build_table_row admin_obj obj %}
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+{% endblock %}

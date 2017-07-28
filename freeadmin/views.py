@@ -14,7 +14,6 @@ def app_index(request):
 
 def filter_querysets(request, queryset):
     conditions = {}
-    print(request.GET)
     for k, v in request.GET.items():
         if v:
             conditions[k] = v

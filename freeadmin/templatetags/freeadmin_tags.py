@@ -46,22 +46,22 @@ def build_table_row(admin_obj, obj):
 
 @register.simple_tag
 def get_filter_field(filter_column, admin_obj):
-    print("admin obj", admin_obj.model, filter_column)
-
     field_obj = admin_obj.model._meta.get_field(filter_column)
     select_ele = """<select name="%s">""" % filter_column
     for choice in field_obj.get_choices():
         selected_condition = admin_obj.filter_conditions.get(filter_column)
-        if selected_condition:  #if none 没有过滤这个条件
-            if selected_condition == choice[0]:
+        print(field_obj.get_choices())
+        if selected_condition != None:  #if none 没有过滤这个条件
+            if selected_condition == str(choice[0]):
+
                 selected = "selected"
             else:
                 selected = ""
         else:
             selected = ""
-        option_ele = """<option value=%s %s>%s</option>""" % (choice[0], selected, choice[1])
+        option_ele = """<option value="%s" %s>%s</option>""" % (choice[0], selected, choice[1])
         select_ele += option_ele
 
     select_ele += "</select>"
 
-    return  mark_safe(select_ele)
+    return mark_safe(select_ele)

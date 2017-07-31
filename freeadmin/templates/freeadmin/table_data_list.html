@@ -34,6 +34,61 @@
             </tr>
         {% endfor %}
       </tbody>
+
     </table>
+    <div class="row">
+{#        <div class="pagination">#}
+{#            <span class="step-links">#}
+{#            {% if admin_obj.querysets.has_previous %}#}
+{#                <a href="?page={{ admin_obj.querysets.previous_page_number }}">previous</a>#}
+{#            {% endif %}#}
+{##}
+{#            <span class="current">#}
+{#                Page {{ admin_obj.querysets.number }} of {{ admin_obj.querysets.paginator.num_pages }}.#}
+{#            </span>#}
+{##}
+{#            {% if admin_obj.querysets.has_next %}#}
+{#                <a href="?page={{ admin_obj.querysets.next_page_number }}">next</a>#}
+{#            {% endif %}#}
+{#            </span>#}
+{#        </div>#}
+        <nav aria-label="...">
+          <ul class="pagination">
+          {% if page == 1 %}
+            <li class="disabled">
+            <a href="#" aria-label="Previous">
+          {% else %}
+            <li>
+            <a href="?page={{ admin_obj.querysets.previous_page_number }}{% generate_filter_url admin_obj %}" aria-label="Previous">
+          {% endif %}
+            <span aria-hidden="true">
+                «
+            </span>
+            </a>
+            </li>
+              {% for page in admin_obj.querysets.paginator.page_range %}
+                  {% if page == admin_obj.querysets.number %}
+                      <li class="active">
+                  {% else %}
+                      <li>
+                  {% endif %}
+                  <a href="?page={{ page }}{% generate_filter_url admin_obj %}">{{ page }}<span class="sr-only">(current)</span></a>
+                  </li>
+              {% endfor %}
+              {% if page == admin_obj.querysets.paginator.num_pages %}
+                <li class="disabled">
+                <a href="#" aria-label="Next">
+              {% else %}
+                <li>
+                  <a href="?page={{ admin_obj.querysets.next_page_number }}{% generate_filter_url admin_obj %}" aria-label="Next">
+              {% endif %}
+                    <span aria-hidden="true">
+                        »
+                    </span>
+                </a>
+              </li>
+          </ul>
+        </nav>
+    </div>
 
 {% endblock %}

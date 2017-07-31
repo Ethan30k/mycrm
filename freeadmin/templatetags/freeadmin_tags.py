@@ -50,8 +50,8 @@ def get_filter_field(filter_column, admin_obj):
     select_ele = """<select name="%s">""" % filter_column
     for choice in field_obj.get_choices():
         selected_condition = admin_obj.filter_conditions.get(filter_column)
-        print(field_obj.get_choices())
-        if selected_condition != None:  #if none 没有过滤这个条件
+        # print(field_obj.get_choices())
+        if selected_condition is not None:  # if none 没有过滤这个条件
             if selected_condition == str(choice[0]):
 
                 selected = "selected"
@@ -65,3 +65,11 @@ def get_filter_field(filter_column, admin_obj):
     select_ele += "</select>"
 
     return mark_safe(select_ele)
+
+
+@register.simple_tag
+def generate_filter_url(admin_obj):
+    url = ""
+    for k, v in admin_obj.filter_conditions.items():
+        url += "&%s=%s" % (k, v)
+    return url

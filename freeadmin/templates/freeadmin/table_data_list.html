@@ -6,14 +6,15 @@
 
     {% if admin_obj.list_filter %}
         <div class="row">
-        <form>
-            {% for filter_column in admin_obj.list_filter %}
-                <div class="col-lg-2">
-                    {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
-                </div>
-            {% endfor %}
-        <input type="submit" class="btn btn-success" value="过滤">
-        </form>
+            <form>
+                {% for filter_column in admin_obj.list_filter %}
+                    <div class="col-lg-2">
+                        {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
+                    </div>
+                {% endfor %}
+            <input type="submit" class="btn btn-success" value="过滤">
+            <input type="hidden" name="_o" value="{% get_current_orderby_key request %}">
+            </form>
         </div>
     {% endif %}
 
@@ -22,7 +23,11 @@
     <thead>
         <tr>
             {% for column in admin_obj.list_display %}
-            <th>{{ column }}</th>
+            <th>
+                <a href="?_o={% get_orderby_key request column %}{% generate_filter_url admin_obj %}">{{ column }}</a>
+                {% display_order_by_icon request column %}
+
+            </th>
             {% endfor %}
         </tr>
     </thead>
@@ -53,41 +58,39 @@
 {#            </span>#}
 {#        </div>#}
         <nav aria-label="...">
-          <ul class="pagination">
-          {% if page == 1 %}
-            <li class="disabled">
-            <a href="#" aria-label="Previous">
-          {% else %}
-            <li>
-            <a href="?page={{ admin_obj.querysets.previous_page_number }}{% generate_filter_url admin_obj %}" aria-label="Previous">
-          {% endif %}
-            <span aria-hidden="true">
-                «
-            </span>
-            </a>
-            </li>
-              {% for page in admin_obj.querysets.paginator.page_range %}
-                  {% if page == admin_obj.querysets.number %}
-                      <li class="active">
-                  {% else %}
-                      <li>
-                  {% endif %}
-                  <a href="?page={{ page }}{% generate_filter_url admin_obj %}">{{ page }}<span class="sr-only">(current)</span></a>
-                  </li>
-              {% endfor %}
-              {% if page == admin_obj.querysets.paginator.num_pages %}
-                <li class="disabled">
-                <a href="#" aria-label="Next">
-              {% else %}
-                <li>
-                  <a href="?page={{ admin_obj.querysets.next_page_number }}{% generate_filter_url admin_obj %}" aria-label="Next">
-              {% endif %}
+            <ul class="pagination">
+                {% if page == 1 %}
+                    <li class="disabled">
+                {% else %}
+                    <li>
+                    <a href="?page={{ admin_obj.querysets.previous_page_number }}{% generater_order_by_url request %}{% generate_filter_url admin_obj %}" aria-label="Previous">
+                {% endif %}
+                <span aria-hidden="true">
+                    «
+                </span>
+                    </a>
+                    </li>
+                {% for page in admin_obj.querysets.paginator.page_range %}
+                    {% if page == admin_obj.querysets.number %}
+                        <li class="active">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="?page={{ page }}{% generater_order_by_url request %}{% generate_filter_url admin_obj %}">{{ page }}<span class="sr-only">(current)</span></a>
+                        </li>
+                {% endfor %}
+                {% if page == admin_obj.querysets.paginator.num_pages %}
+                    <li class="disabled">
+                {% else %}
+                    <li>
+                    <a href="?page={{ admin_obj.querysets.next_page_number }}{% generater_order_by_url request %}{% generate_filter_url admin_obj %}" aria-label="Next">
+                {% endif %}
                     <span aria-hidden="true">
                         »
                     </span>
-                </a>
-              </li>
-          </ul>
+                    </a>
+                    </li>
+            </ul>
         </nav>
     </div>
 

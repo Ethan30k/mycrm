@@ -73,3 +73,48 @@ def generate_filter_url(admin_obj):
     for k, v in admin_obj.filter_conditions.items():
         url += "&%s=%s" % (k, v)
     return url
+
+
+@register.simple_tag
+def get_orderby_key(request, column):
+    current_order_by_key = request.GET.get("_o")
+    # print(column, current_order_by_key)
+    if current_order_by_key is not None:    # 肯定有某列被排序
+        if current_order_by_key == column:  # 当前这列被排序
+            return "-%s" % column
+        else:
+            return column.strip("-")
+    return column
+
+
+@register.simple_tag
+def display_order_by_icon(request, column):
+    current_order_by_key = request.GET.get("_o")
+    # print(column, current_order_by_key)
+    if current_order_by_key is not None:
+        if current_order_by_key.strip("-") == column:
+            if current_order_by_key.startswith("-"):
+                ele = """<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>"""
+                return mark_safe(ele)
+            else:
+                ele = """<span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>"""
+                return mark_safe(ele)
+        else:
+            return ""
+    else:
+        return ""
+
+
+@register.simple_tag
+def get_current_orderby_key(request):
+    # 获取当前正在排序的字段名
+    current_order_by_key = request.GET.get("_o")
+    return current_order_by_key
+
+
+@register.simple_tag
+def generater_order_by_url(request):
+    current_order_by_key = request.GET.get("_o")
+    if current_order_by_key is not None:
+        return "&_o=%s" % current_order_by_key
+    return ""

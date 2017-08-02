@@ -12,7 +12,7 @@ class BaseAdmin(object):
     list_filter = ()
     search_fields = ()
     list_editable = ()
-    list_per_page = 2
+    list_per_page = 4
 
 
 registered_sites = {}

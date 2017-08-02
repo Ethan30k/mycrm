@@ -16,7 +16,7 @@ def app_index(request):
 def filter_querysets(request, queryset):
     conditions = {}
     for k, v in request.GET.items():
-        if k == "page":
+        if k in ("page", "_o"):
             continue
         if v:
             conditions[k] = v
@@ -26,13 +26,28 @@ def filter_querysets(request, queryset):
     return query_res, conditions
 
 
+def get_orderby(request, queryset):
+    order_by_key = request.GET.get("_o")
+    if order_by_key == "None":
+        order_by_key = None
+    if order_by_key is not None:
+        print("1", order_by_key, type(order_by_key))
+        query_res = queryset.order_by(order_by_key)
+    else:
+        query_res = queryset
+        print("2", order_by_key, type(order_by_key))
+    return query_res
+
+
 def table_data_list(request, app_name, model_name):
     admin_obj = base_admin.site.registered_sites[app_name][model_name]
     obj_list = admin_obj.model.objects.all()
     queryset, conditions = filter_querysets(request, obj_list)
     print("---->", queryset)
 
-    paginator = Paginator(queryset, admin_obj.list_per_page) # Show 25 contacts per page
+    sorted_queryset = get_orderby(request, queryset)
+
+    paginator = Paginator(sorted_queryset, admin_obj.list_per_page)  # Show 25 contacts per page
 
     if request.GET.get('page') is not None:
         page = int(request.GET.get('page'))

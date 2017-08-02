@@ -11,7 +11,6 @@ class CustomerAdmin(admin.ModelAdmin):
     list_editable = ('status',)
 
 
-
 class CustomerFollowUPAdmin(admin.ModelAdmin):
     list_display = ('customer', 'content', 'status', 'consultant', 'date')
 

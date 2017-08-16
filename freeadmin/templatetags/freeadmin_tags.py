@@ -9,7 +9,6 @@ register = template.Library()
 
 @register.simple_tag
 def get_model_verbose_name(model_obj):
-
     model_name = model_obj._meta.verbose_name if model_obj._meta.verbose_name else model_obj._meta.verbose_name_plural
     if not model_name:
         model_name = model_obj._meta.model_name
@@ -30,14 +29,22 @@ def get_app_name(model_obj):
 def build_table_row(admin_obj, obj):
     row_ele = ""
     if admin_obj.list_display:
-        for column in admin_obj.list_display:
+        for index, column in enumerate(admin_obj.list_display):
             column_obj = obj._meta.get_field(column)
             if column_obj.choices:
                 get_column_data = getattr(obj, "get_%s_display" % column)
                 column_data = get_column_data()
             else:
                 column_data = getattr(obj, column)
-            td_ele = '''<td>%s</td>''' % column_data
+            if index == 0:
+                td_ele = '''<td><a href="/freeadmin/{app_name}/{model_name}/{obj_id}/change/">{column_data}</a></td>'''\
+                    .format(app_name=admin_obj.model._meta.app_label,
+                            model_name=admin_obj.model._meta.model_name,
+                            obj_id=obj.id,
+                            column_data=column_data,
+                            )
+            else:
+                td_ele = '''<td>%s</td>''' % column_data
             row_ele += td_ele
     else:
         row_ele += "<td>%s</td>" % obj
@@ -79,7 +86,7 @@ def generate_filter_url(admin_obj):
 def get_orderby_key(request, column):
     current_order_by_key = request.GET.get("_o")
     # print(column, current_order_by_key)
-    if current_order_by_key is not None:    # 肯定有某列被排序
+    if current_order_by_key is not None:  # 肯定有某列被排序
         if current_order_by_key == column:  # 当前这列被排序
             return "-%s" % column
         else:
@@ -90,7 +97,6 @@ def get_orderby_key(request, column):
 @register.simple_tag
 def display_order_by_icon(request, column):
     current_order_by_key = request.GET.get("_o")
-    # print(column, current_order_by_key)
     if current_order_by_key is not None:
         if current_order_by_key.strip("-") == column:
             if current_order_by_key.startswith("-"):
@@ -118,3 +124,31 @@ def generater_order_by_url(request):
     if current_order_by_key is not None:
         return "&_o=%s" % current_order_by_key
     return ""
+
+
+@register.simple_tag
+def get_search_key(request):
+    return request.GET.get("_q") or ""
+
+
+@register.simple_tag
+def print_obj(obj):
+    print("DEBUG:::", obj)
+    print("DEBUG:::", dir(obj))
+
+
+@register.simple_tag
+def get_admin_actions(admin_obj):
+    options = "<option class='form-control' value='-1'>-----选择操作-----</option>"
+    actions = admin_obj.default_actions + admin_obj.actions
+
+    for action in actions:
+        action_func = getattr(admin_obj, action)
+        if hasattr(action_func, "short_description"):
+            action_name = action_func.short_description
+        else:
+            action_name = action
+        options += """<option value="{action_func_name}">{action_name}</option>""".format(action_func_name=action,
+                                                                                          action_name=action_name)
+
+    return mark_safe(options)

@@ -13,7 +13,12 @@ class BaseAdmin(object):
     search_fields = ()
     list_editable = ()
     list_per_page = 4
+    readonly_fields = ()
+    default_actions = ["delete_selected"]
+    actions = []
 
+    def delete_selected(self, request, queryset):
+        print("going to delete")
 
 registered_sites = {}
 

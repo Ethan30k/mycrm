@@ -1,0 +1,59 @@
+{% extends "freeadmin/index.html" %}
+
+
+{% load freeadmin_tags  %}
+
+{% block right-container-content %}
+    <div class="row" style="margin-bottom: 20px">
+        <ol class="breadcrumb">
+          <li><a href="/freeadmin/">Home</a></li>
+          <li><a href="/freeadmin/{% get_app_name admin_obj.model %}/">{% get_app_name admin_obj.model %}</a></li>
+          <li><a href="/freeadmin/{% get_app_name admin_obj.model %}/{% get_model_name admin_obj.model %}/">{% get_model_name admin_obj.model %}</a></li>
+          <li class="active">{{ obj_form.instance }}</li>
+        </ol>
+        {% block customer-edit %}
+        <h4>Change {% get_model_verbose_name admin_obj.model %}</h4>
+        {% endblock %}
+    </div>
+    <div class="row">
+        {{ obj_form.errors }}
+        <form class="form-horizontal" method="post" onsubmit="return BeforeFormSubmit(this);">{% csrf_token %}
+        {% for field in obj_form %}
+            <div class="form-group">
+                <label class="col-sm-2" style="font-weight: normal">
+{#                    {{ field.field.required }}#}
+                    {% if field.field.required %}
+                        <b>{{ field.label }}</b>
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+                <div class="col-sm-10">
+                    <span style="color: red">{{ field.errors }}</span>
+{#                    {% if field.name in admin_obj.readonly_fields %}#}
+{#                        <p>{% print_obj field %}</p>#}
+{#                        <p>{{ field.value }}</p>#}
+{#                    {% else %}#}
+{#                        {{ field }}#}
+{#                    {% endif %}#}
+                    {{ field }}
+                </div>
+             </div>
+        {% endfor %}
+        <input type="submit" value="Save" class="pull-right btn btn-info">
+        </form>
+    </div>
+
+    <script>
+        /**
+         * @return {boolean}
+         */
+        function BeforeFormSubmit(form_ele){
+            console.log(form_ele);
+            $('form input[disabled]').prop("disabled", false);
+{#            return false;#}
+        }
+    </script>
+
+{% endblock %}
+

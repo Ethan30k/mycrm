@@ -31,7 +31,7 @@ class Customer(models.Model):
     status = models.SmallIntegerField(choices=status_choices)
     consultant = models.ForeignKey("UserProfile", verbose_name="课程顾问")
     consult_content = models.TextField(max_length=1024)
-
+    graduated = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

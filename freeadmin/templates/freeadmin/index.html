@@ -42,12 +42,15 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
               {% block side-bar-menus %}
-                  {% for role in request.user.userprofile.roles.all %}
+              {% for role in request.user.userprofile.roles.all %}
 {#            <li class="active"><a href="http://v3.bootcss.com/examples/dashboard/#">Overview <span class="sr-only">(current)</span></a></li>#}
 {#            <li><a href="http://v3.bootcss.com/examples/dashboard/#">{{ role }}</a></li>#}
                 <hr>
+{#                  <li>{{ role }}</li>#}
                 {% for menu in role.menus.all %}
+{#                    <li>{{ menu }}</li>#}
                     <li><a href="{% if menu.url_type == 0  %}{% url menu.url_name %}{% else %}{{ menu.url_name }}{% endif %}">{{ menu.name }}</a></li>
+
                 {% endfor %}
               {% endfor %}
               {% endblock %}

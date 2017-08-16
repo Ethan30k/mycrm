@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 
 
 def acc_login(request):

@@ -21,7 +21,6 @@
         {% for field in obj_form %}
             <div class="form-group">
                 <label class="col-sm-2" style="font-weight: normal">
-{#                    {{ field.field.required }}#}
                     {% if field.field.required %}
                         <b>{{ field.label }}</b>
                     {% else %}
@@ -30,15 +29,9 @@
                 </label>
                 <div class="col-sm-10">
                     <span style="color: red">{{ field.errors }}</span>
-{#                    {% if field.name in admin_obj.readonly_fields %}#}
-{#                        <p>{% print_obj field %}</p>#}
-{#                        <p>{{ field.value }}</p>#}
-{#                    {% else %}#}
-{#                        {{ field }}#}
-{#                    {% endif %}#}
                     {{ field }}
                 </div>
-             </div>
+            </div>
         {% endfor %}
         <input type="submit" value="Save" class="pull-right btn btn-info">
         </form>

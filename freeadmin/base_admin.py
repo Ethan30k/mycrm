@@ -9,7 +9,7 @@ class AdminRegisterException(Exception):
 
 class BaseAdmin(object):
     list_display = ()
-    list_filter = ()
+    list_filter = ()    # 有choice字段才能用
     search_fields = ()
     list_editable = ()
     list_per_page = 4

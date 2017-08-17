@@ -13,19 +13,22 @@
     </div>
 
 
-    {% if admin_obj.list_filter %}
+    {% if admin_obj.search_fields or admin_obj.list_filter %}
         <div class="row">
             <form>
-                {% for filter_column in admin_obj.list_filter %}
-                    <div class="col-lg-2">
-                        {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
-                    </div>
-                {% endfor %}
-            <input name="_q" value="{% get_search_key request %}">
-            <input type="submit" class="btn btn-success" value="过滤">
-            <input type="hidden" name="_o" value="{% get_current_orderby_key request %}">
+                {% if admin_obj.list_filter %}
+                    {% for filter_column in admin_obj.list_filter %}
+                        <div class="col-lg-2">
+                            {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if admin_obj.search_fields %}
+                    <input name="_q" value="{% get_search_key request %}">
+                {% endif %}
+                <input type="submit" class="btn btn-success" value="过滤">
+                <input type="hidden" name="_o" value="{% get_current_orderby_key request %}">
             </form>
-
         </div>
         <hr>
     {% endif %}
@@ -68,21 +71,6 @@
 
     </table>
     <div class="row">
-{#        <div class="pagination">#}
-{#            <span class="step-links">#}
-{#            {% if admin_obj.querysets.has_previous %}#}
-{#                <a href="?page={{ admin_obj.querysets.previous_page_number }}">previous</a>#}
-{#            {% endif %}#}
-{##}
-{#            <span class="current">#}
-{#                Page {{ admin_obj.querysets.number }} of {{ admin_obj.querysets.paginator.num_pages }}.#}
-{#            </span>#}
-{##}
-{#            {% if admin_obj.querysets.has_next %}#}
-{#                <a href="?page={{ admin_obj.querysets.next_page_number }}">next</a>#}
-{#            {% endif %}#}
-{#            </span>#}
-{#        </div>#}
         <nav aria-label="...">
             <ul class="pagination">
                 {% if page == 1 %}

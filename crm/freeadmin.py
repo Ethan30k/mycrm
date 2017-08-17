@@ -5,8 +5,6 @@
 from crm import models
 from freeadmin.base_admin import site, BaseAdmin
 
-# print("freeadmin crm", models.Customer)
-
 
 class CustomerAdmin(BaseAdmin):
     list_display = ('id', 'name', 'qq', 'consultant', 'source', 'consult_content', 'status', 'date')
@@ -24,17 +22,17 @@ class CustomerAdmin(BaseAdmin):
 
 
 class CourseAdmin(BaseAdmin):
-    list_display = ('name', 'outline', 'price')
+    list_display = ('id', 'name', 'outline', 'price')
 
 
 class ClassListAdmin(BaseAdmin):
-    list_display = ('course', 'semester')
+    list_display = ('id', 'course', 'semester')
 
 
 class CourseRecordAdmin(BaseAdmin):
-    list_display = ('class_grade', 'day_number', 'teacher', 'CourseContent')
+    list_display = ('id', 'class_grade', 'day_number', 'teacher', 'CourseContent')
     # list_filter = ('day_number',)
-    # search_fields = ()
+    search_fields = ('day_number',)
     actions = ['change_status']
 
     def change_status(self, request, querysets):

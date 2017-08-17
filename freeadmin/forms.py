@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.forms import ModelForm
 from crm import models
 from django.utils.translation import ugettext as _
 
@@ -11,6 +12,13 @@ from django.utils.translation import ugettext as _
 #         model = models.Customer
 #         fields = "__all__"
 
+    # def __new__(cls, *args, **kwargs):
+    #     print(cls.base_fields.items())
+    #     for field_name, field_obj in cls.base_fields.items():
+    #         field_obj.widget.attrs['class'] = 'form-control'
+    #         if field_name in admin_obj.readonly_fields:
+    #             field_obj.widget.attrs['disabled'] = True
+    #     return forms.ModelForm.__new__(cls)
 
 def CreateModelForm(request, admin_obj):
     class Meta:
@@ -21,11 +29,14 @@ def CreateModelForm(request, admin_obj):
         fields = "__all__"
 
     def __new__(cls, *args, **kwargs):
-        for field_name, field_obj in cls.base_fields.items():
+        print(cls.base_fields.items())
+        for field_name in cls.base_fields:
+            field_obj = cls.base_fields[field_name]
             field_obj.widget.attrs['class'] = 'form-control'
             if field_name in admin_obj.readonly_fields:
                 field_obj.widget.attrs['disabled'] = True
-        return forms.ModelForm.__new__(cls)
+
+        return ModelForm.__new__(cls)
 
     def default_clean(self):
         # print("default clean:", self)

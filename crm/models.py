@@ -35,7 +35,7 @@ class Customer(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return "%s" % self.name
 
     class Meta:
         verbose_name_plural = "客户信息表"
@@ -49,7 +49,7 @@ class Enrollment(models.Model):
     enrollment_date = models.DateField()
 
     def __str__(self):
-        return self.customer
+        return "%s" % self.customer
 
     class Meta:
         unique_together = ("customer", "class_grade")
@@ -101,17 +101,18 @@ class ClassList(models.Model):
     end_date = models.DateField()
 
     def __str__(self):
-        return "%s" % self.course
+         return "%s(%s)" % (self.course, self.semester)
 
     class Meta:
         verbose_name_plural = "班级信息表"
         verbose_name = "班级信息表"
+        unique_together = ("course", "semester")
 
 
 class CourseRecord(models.Model):
     """每节课上课记录"""
-    class_grade = models.ForeignKey("ClassList")
-    day_number = models.PositiveIntegerField(verbose_name="节次")
+    class_grade = models.ForeignKey("ClassList", verbose_name="班级(课程)")
+    day_number = models.PositiveIntegerField(verbose_name="节次", help_text="此处填写第几节课或第几天课程...,必须为数字")
     teacher = models.ForeignKey("UserProfile")
     CourseContent = models.TextField(verbose_name="课程内容", max_length=1024)
     has_homework = models.BooleanField(default=True)
@@ -119,7 +120,7 @@ class CourseRecord(models.Model):
     homework_requirement = models.TextField(verbose_name="作业需求", max_length=1024, blank=True, null=True)
 
     def __str__(self):
-        return "%s" % self.class_grade
+        return "%s 第%s天" % (self.class_grade, self.day_number)
 
     class Meta:
         unique_together = ("class_grade", "day_number")

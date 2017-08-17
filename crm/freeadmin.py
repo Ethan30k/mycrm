@@ -30,7 +30,17 @@ class CourseAdmin(BaseAdmin):
 class ClassListAdmin(BaseAdmin):
     list_display = ('course', 'semester')
 
+
+class CourseRecordAdmin(BaseAdmin):
+    list_display = ('class_grade', 'day_number', 'teacher', 'CourseContent')
+    # list_filter = ('day_number',)
+    # search_fields = ()
+    actions = ['change_status']
+
+    def change_status(self, request, querysets):
+        print("change status", querysets)
+
 site.register(models.Customer, CustomerAdmin)
 site.register(models.ClassList, ClassListAdmin)
-site.register(models.CourseRecord)
+site.register(models.CourseRecord, CourseRecordAdmin)
 site.register(models.Course, CourseAdmin)

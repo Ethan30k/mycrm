@@ -55,9 +55,9 @@ def build_table_row(admin_obj, obj):
 def get_filter_field(filter_column, admin_obj):
     field_obj = admin_obj.model._meta.get_field(filter_column)
     select_ele = """<select name="%s">""" % filter_column
+    print(field_obj.get_choices())
     for choice in field_obj.get_choices():
         selected_condition = admin_obj.filter_conditions.get(filter_column)
-        # print(field_obj.get_choices())
         if selected_condition is not None:  # if none 没有过滤这个条件
             if selected_condition == str(choice[0]):
 

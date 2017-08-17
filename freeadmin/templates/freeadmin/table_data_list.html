@@ -21,27 +21,22 @@
                         {{ filter_column }}:{% get_filter_field filter_column admin_obj %}
                     </div>
                 {% endfor %}
+            <input name="_q" value="{% get_search_key request %}">
             <input type="submit" class="btn btn-success" value="过滤">
             <input type="hidden" name="_o" value="{% get_current_orderby_key request %}">
-
-            <hr>
-
-                <input type="text" name="_q" value="{% get_search_key request %}">
-
-
             </form>
+
+        </div>
+        <hr>
+    {% endif %}
+
+    <div class="row">
         <form name="test" method="post" onsubmit="return ActionValidation(this)">{% csrf_token %}
             <select name="action_select">
                     {% get_admin_actions admin_obj %}
             </select>
             <input type="submit" value="执行">
         </form>
-        </div>
-    {% endif %}
-
-    <div class="row">
-
-
     </div>
 
     <table class="table table-hover">

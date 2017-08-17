@@ -15,7 +15,7 @@ def acc_login(request):
         if user:
             #auth pass
             login(request, user)
-            return redirect("/crm")
+            return redirect("/freeadmin")
 
     return render(request, "login.html")
 

@@ -6,8 +6,10 @@ from freeadmin import forms
 from django.db.models import Q
 from freeadmin import base_admin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def app_index(request):
     return render(request, 'freeadmin/app_index.html', {"site": base_admin.site})
 
@@ -57,7 +59,6 @@ def table_data_list(request, app_name, model_name):
         selected_objs = admin_obj.model.objects.filter(id__in=selected_ids)
         action_func = getattr(admin_obj, action)
         action_func(request, selected_objs)
-
 
     obj_list = admin_obj.model.objects.all()
     queryset, conditions = filter_querysets(request, obj_list)

@@ -80,7 +80,11 @@ class Course(models.Model):
     outline = models.TextField()
 
     def __str__(self):
-        return self.name
+        return "%s" % self.name
+
+    class Meta:
+        verbose_name_plural = "课程信息表"
+        verbose_name = "课程信息表"
 
 
 class ClassList(models.Model):
@@ -99,6 +103,10 @@ class ClassList(models.Model):
     def __str__(self):
         return "%s" % self.course
 
+    class Meta:
+        verbose_name_plural = "班级信息表"
+        verbose_name = "班级信息表"
+
 
 class CourseRecord(models.Model):
     """每节课上课记录"""
@@ -111,10 +119,12 @@ class CourseRecord(models.Model):
     homework_requirement = models.TextField(verbose_name="作业需求", max_length=1024, blank=True, null=True)
 
     def __str__(self):
-        return "daynum:%s" % (self.day_number)
+        return "%s" % self.class_grade
 
     class Meta:
         unique_together = ("class_grade", "day_number")
+        verbose_name_plural = "上课记录表"
+        verbose_name = "上课记录表"
 
 
 class StudyRecord(models.Model):

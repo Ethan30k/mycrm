@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your models here.
 
 
@@ -80,7 +82,7 @@ class Course(models.Model):
     outline = models.TextField()
 
     def __str__(self):
-        return "%s" % self.name
+            return "%s" % self.name
 
     class Meta:
         verbose_name_plural = "课程信息表"
@@ -101,7 +103,11 @@ class ClassList(models.Model):
     end_date = models.DateField()
 
     def __str__(self):
-         return "%s(%s)" % (self.course, self.semester)
+        try:
+            return "%s(%s)" % (self.course, self.semester)
+        except Course.DoesNotExist:
+            return "%s" % self.semester
+
 
     class Meta:
         verbose_name_plural = "班级信息表"
@@ -120,7 +126,10 @@ class CourseRecord(models.Model):
     homework_requirement = models.TextField(verbose_name="作业需求", max_length=1024, blank=True, null=True)
 
     def __str__(self):
-        return "%s 第%s天" % (self.class_grade, self.day_number)
+        try:
+            return "%s 第%s天" % (self.class_grade, self.day_number)
+        except ClassList.DoesNotExist:
+            return "%s" % self.day_number
 
     class Meta:
         unique_together = ("class_grade", "day_number")

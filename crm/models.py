@@ -51,7 +51,10 @@ class Enrollment(models.Model):
     enrollment_date = models.DateField()
 
     def __str__(self):
-        return "%s" % self.customer
+        try:
+            return "%s" % self.customer
+        except Customer.DoesNotExist:
+            return "%s" % self.enrollment_date
 
     class Meta:
         unique_together = ("customer", "class_grade")
@@ -73,7 +76,10 @@ class FollowUpRecord(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s" % self.customer
+        try:
+            return "%s" % self.customer
+        except Customer.DoesNotExist:
+            return "%s" % self.content
 
 
 class Course(models.Model):
@@ -107,7 +113,6 @@ class ClassList(models.Model):
             return "%s(%s)" % (self.course, self.semester)
         except Course.DoesNotExist:
             return "%s" % self.semester
-
 
     class Meta:
         verbose_name_plural = "班级信息表"
@@ -162,7 +167,10 @@ class StudyRecord(models.Model):
     grade_comment = models.TextField(max_length=1024, blank=True, null=True)
 
     def __str__(self):
-        return "%s daynum:%s" % (self.student, self.course_record)
+        try:
+            return "%s daynum:%s" % (self.student, self.course_record)
+        except CourseRecord.DoesNotExist:
+            return "%s" % self.score
 
     class Meta:
         unique_together = ("course_record", "student")

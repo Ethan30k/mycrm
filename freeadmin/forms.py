@@ -7,36 +7,18 @@ from crm import models
 from django.utils.translation import ugettext as _
 
 
-# class CustomerModelForm(forms.ModelForm):
-#     class Meta:
-#         model = models.Customer
-#         fields = "__all__"
-
-    # def __new__(cls, *args, **kwargs):
-    #     print(cls.base_fields.items())
-    #     for field_name, field_obj in cls.base_fields.items():
-    #         field_obj.widget.attrs['class'] = 'form-control'
-    #         if field_name in admin_obj.readonly_fields:
-    #             field_obj.widget.attrs['disabled'] = True
-    #     return forms.ModelForm.__new__(cls)
-
 def CreateModelForm(request, admin_obj):
     class Meta:
         model = admin_obj.model
-        # if admin_obj.readonly_fields:
-            # exclude = admin_obj.readonly_fields
-        # else:
         fields = "__all__"
 
     def __new__(cls, *args, **kwargs):
         print(cls.base_fields.items())
-        for field_name in cls.base_fields:
-            field_obj = cls.base_fields[field_name]
+        for field_name, field_obj in cls.base_fields.items():
             field_obj.widget.attrs['class'] = 'form-control'
             if field_name in admin_obj.readonly_fields:
                 field_obj.widget.attrs['disabled'] = True
-
-        return ModelForm.__new__(cls)
+        return forms.ModelForm.__new__(cls)
 
     def default_clean(self):
         # print("default clean:", self)

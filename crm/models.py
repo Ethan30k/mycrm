@@ -185,6 +185,15 @@ class UserProfile(models.Model):
     def __str__(self):
         return "%s" % self.name
 
+    class Meta:
+        permissions = (
+            ('crm_app_index', '可以查看freeadmin所有的app首页'),
+            ('crm_table_list', '可以查看freeadmin表里的所有数据'),
+            ('crm_table_list_view', '可以查看freeadmin表里每条数据的修改页'),
+            ('crm_table_list_change', '可以修改freeadmin表里每条数据'),
+            ('crm_table_list_add', '可以添加数据'),
+        )
+
 
 class Role(models.Model):
     """角色表"""

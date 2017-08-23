@@ -16,7 +16,7 @@ class CustomerAdmin(BaseAdmin):
 
     def change_status(self, request, querysets):
         print("change status", querysets)
-        querysets.update(status=1)
+        querysets.update(status=0)
 
     change_status.short_description = "改变报名状态"
 

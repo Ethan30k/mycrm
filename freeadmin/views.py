@@ -7,9 +7,11 @@ from django.db.models import Q
 from freeadmin import base_admin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from freeadmin import permission
 
 
 @login_required
+@permission.check_permission
 def app_index(request):
     return render(request, 'freeadmin/app_index.html', {"site": base_admin.site})
 
@@ -48,6 +50,7 @@ def get_queryset_search_result(request, queryset, admin_obj):
     return res
 
 
+@permission.check_permission
 def table_data_list(request, app_name, model_name):
     admin_obj = base_admin.site.registered_sites[app_name][model_name]
 
@@ -88,6 +91,7 @@ def table_data_list(request, app_name, model_name):
     return render(request, "freeadmin/table_data_list.html", locals())
 
 
+@permission.check_permission
 def table_change(request, app_name, model_name, obj_id):
     admin_obj = base_admin.site.registered_sites[app_name][model_name]
 
@@ -103,6 +107,7 @@ def table_change(request, app_name, model_name, obj_id):
     return render(request, "freeadmin/table_change.html", locals())
 
 
+@permission.check_permission
 def table_add(request, app_name, model_name):
     admin_obj = base_admin.site.registered_sites[app_name][model_name]
     model_form = forms.CreateModelForm(request, admin_obj=admin_obj)

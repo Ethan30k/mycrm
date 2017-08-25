@@ -1,0 +1,73 @@
+{% extends "index.html" %}
+{% load freeadmin_tags  %}
+{% block right-container-content %}
+    <div class="row" style="margin-bottom: 20px">
+        <ol class="breadcrumb">
+          <li><a href="/freeadmin/">Home</a></li>
+          <li><a href="/freeadmin/crm/customer/">customer</a></li>
+          <li class="active">{{ enrollment_obj.customer.name }}</li>
+        </ol>
+    </div>
+    <h2>
+        客户报名审核页 | <span style="color: red">{{ enrollment_obj.customer.name }}</span>
+    </h2>
+
+
+    <div class="row">
+        {% for field in form %}
+            <div class="form-group">
+                <label class="col-lg-2" style="font-weight: normal">
+                    {% if field.field.required %}
+                        <b>{{ field.label }}:</b>
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+                <div class="col-lg-10">
+                    <span style="color: red">{{ field.errors }}</span>
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <form method="post" onsubmit="return FormVerification()">{% csrf_token %}
+            {% for field in enrollment_form %}
+                <div class="form-group">
+                    <label class="col-lg-2" style="font-weight: normal">
+                        {% if field.field.required %}
+                            <b>{{ field.label }}:</b>
+                        {% else %}
+                            {{ field.label }}
+                        {% endif %}
+                    </label>
+                    <div class="col-lg-10">
+                        <span style="color: red">{{ field.errors }}</span>
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="row pull-right">
+                <div class="col-lg-6">
+                    <a type="submit" class="btn btn-danger" href="#">驳回</a>
+                </div>
+                <div class="col-lg-6">
+                    <input type="submit" class="btn btn-success" value="下一步">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+<script>
+    function FormVerification(){
+        if (!$("input[name='contract_approved']").prop("checked")){
+            alert("必须勾选已审核才能进入下一步");
+            return false;
+        }
+    }
+
+</script>
+
+{% endblock %}
+

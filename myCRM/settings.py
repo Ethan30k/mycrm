@@ -128,3 +128,11 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_URL = "/login/"
+
+# EMAIL_USE_TLS = False
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_HOST_PASSWORD = 'XXXX'
+# EMAIL_HOST_USER = '448461456@qq.com'
+# EMAIL_PORT = 465
+# DEFAULT_FROM_EMAIL = '成怡强<448461456@qq.com>'

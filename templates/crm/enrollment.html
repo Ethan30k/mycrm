@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+{% load freeadmin_tags  %}
+{% block right-container-content %}
+    <div class="row" style="margin-bottom: 20px">
+        <ol class="breadcrumb">
+          <li><a href="/freeadmin/">Home</a></li>
+          <li><a href="/freeadmin/crm/customer/">customer</a></li>
+          <li class="active">{{ customer_name }}</li>
+        </ol>
+    </div>
+    <h2>
+        客户报名 | <span style="color: red">{{ customer_name }}</span>
+    </h2>
+    <form method="post">{% csrf_token %}
+        <span style="color: red;">{{ form.errors }}</span>
+        {% for field in form %}
+            <div class="form-group">
+{#                <label class="" style="font-weight: normal">#}
+                <label class="col-lg-2" style="font-weight: normal">
+                    {% if field.field.required %}
+                        <b>{{ field.label }}:</b>
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+{#                <div class="">#}
+                <div class="col-lg-10">
+                    <span style="color: red">{{ field.errors }}</span>
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <input type="submit" style="margin-top: 20px" class="btn btn-success pull-right" value="下一步">
+    </form>
+
+    <div class="row">
+        {% if msg %}
+            {{ msg }}
+        {% endif %}
+    </div>
+
+
+{% endblock %}
+

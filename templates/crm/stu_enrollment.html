@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load freeadmin_tags  %}
+{% block body %}
+<div class="container">
+    <h2>报名表</h2>
+    <form method="post" onsubmit="return EnrollmentVerification()">{% csrf_token %}
+        <span style="color: red;">{{ form.errors }}</span>
+        {% for field in form %}
+            <div class="form-group">
+{#                <label class="" style="font-weight: normal">#}
+                <label class="col-lg-2" style="font-weight: normal">
+                    {% if field.field.required %}
+                        <b>{{ field.label }}:</b>
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+{#                <div class="">#}
+                <div class="col-lg-10">
+                    <span style="color: red">{{ field.errors }}</span>
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <pre style="height: 300px; overflow: auto;">{{ enrollment_obj.class_grade.contract_template.content }}</pre>
+
+        <input type="submit" style="margin-top: 20px" class="btn btn-success pull-right" value="提交">
+        <input type="checkbox" name="contract_agreed">我已认真阅读，非常好
+
+    </form>
+
+    <div class="row">
+        {% if msg %}
+            {{ msg }}
+        {% endif %}
+    </div>
+</div>
+
+
+<script>
+    function EnrollmentVerification(){
+        if (!$("input[name='contract_agreed']").prop("checked")){
+            alert("必须同意协议条款");
+
+            return false;
+        }
+        $("form select").prop('disabled', false);
+        $("form input").prop('disabled', false);
+    }
+</script>
+
+
+
+{% endblock %}
+

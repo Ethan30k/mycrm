@@ -3,6 +3,7 @@
 
 from django import template
 from django.utils.safestring import mark_safe
+from django.core.exceptions import FieldDoesNotExist
 
 register = template.Library()
 
@@ -28,14 +29,24 @@ def get_app_name(model_obj):
 @register.simple_tag
 def build_table_row(admin_obj, obj):
     row_ele = ""
+    print(obj)
     if admin_obj.list_display:
         for index, column in enumerate(admin_obj.list_display):
-            column_obj = obj._meta.get_field(column)
-            if column_obj.choices:
-                get_column_data = getattr(obj, "get_%s_display" % column)
-                column_data = get_column_data()
-            else:
-                column_data = getattr(obj, column)
+            try:
+                column_obj = obj._meta.get_field(column)
+                if column_obj.choices:
+                    get_column_data = getattr(obj, "get_%s_display" % column)
+                    column_data = get_column_data()
+                else:
+                    column_data = getattr(obj, column)
+
+            except FieldDoesNotExist as e:
+                if hasattr(obj, column):
+                    column_obj = getattr(obj, column)
+                    column_data = column_obj()
+                else:
+                    raise FieldDoesNotExist
+
             if index == 0:
                 td_ele = '''<td><a href="/freeadmin/{app_name}/{model_name}/{obj_id}/change/">{column_data}</a></td>'''\
                     .format(app_name=admin_obj.model._meta.app_label,

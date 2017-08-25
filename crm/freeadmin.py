@@ -7,7 +7,7 @@ from freeadmin.base_admin import site, BaseAdmin
 
 
 class CustomerAdmin(BaseAdmin):
-    list_display = ('id', 'name', 'qq', 'consultant', 'source', 'consult_content', 'status', 'date')
+    list_display = ('id', 'name', 'qq', 'consultant', 'source', 'consult_content', 'status', 'date', 'stu_enrollment')
     list_filter = ('source', 'status', 'consultant')
     search_fields = ('qq', 'name', 'status')
     list_editable = ('status',)

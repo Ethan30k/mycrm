@@ -23,7 +23,7 @@ class Customer(models.Model):
                       )
     source = models.SmallIntegerField(choices=source_choices)
     referral_from = models.ForeignKey("self", related_name="my_referrals",
-                                      blank=True, null=True,verbose_name="转介绍")
+                                      blank=True, null=True, verbose_name="转介绍")
 
     consult_courses = models.ManyToManyField("Course")
     status_choices = ((0, '已报名'),
@@ -35,6 +35,10 @@ class Customer(models.Model):
     consult_content = models.TextField(max_length=1024)
     graduated = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)
+
+    def stu_enrollment(self):
+        ele = '''<a href='/crm/customer/enrollment/%s/'>报名</a>''' % self.id
+        return ele
 
     def __str__(self):
         return "%s" % self.name
@@ -48,7 +52,9 @@ class Enrollment(models.Model):
     """学员报名信息"""
     customer = models.ForeignKey("Customer")
     class_grade = models.ForeignKey("ClassList")
-    enrollment_date = models.DateField()
+    enrollment_date = models.DateField(auto_now_add=True)
+    contract_agreed = models.BooleanField("学员已签署协议", help_text="我已认真阅读", default=False)
+    contract_approved = models.BooleanField("协议已审核", help_text="销售审核", default=False)
 
     def __str__(self):
         try:
@@ -98,6 +104,7 @@ class Course(models.Model):
 class ClassList(models.Model):
     course = models.ForeignKey("Course")
     semester = models.PositiveIntegerField(verbose_name="学期")
+    contract_template = models.ForeignKey("ContractTemplate", blank=True, null=True)
     class_type_choice = ((0, '脱产'),
                   (1, '周末'),
                   (2, '网络'),
@@ -220,3 +227,12 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ContractTemplate(models.Model):
+    name = models.CharField(max_length=64)
+    content = models.TextField()
+
+    def __str__(self):
+        return "%s" % self.name
+

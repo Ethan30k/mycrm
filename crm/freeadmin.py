@@ -14,6 +14,8 @@ class CustomerAdmin(BaseAdmin):
     readonly_fields = ('qq', 'name')
     actions = ['change_status']
 
+    filter_horizontal = ('consult_courses',)
+
     def change_status(self, request, querysets):
         print("change status", querysets)
         querysets.update(status=0)

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load freeadmin_tags  %}
 {% block body %}
+<div class="row" style="margin-bottom: 20px">
+    <ol class="breadcrumb">
+      <li><a href="/freeadmin/">Home</a></li>
+      <li><a href="/freeadmin/crm/customer/">customer</a></li>
+      <li class="active">{{ enrollment_obj.customer.name }}</li>
+    </ol>
+</div>
 <div class="container">
     <h2>报名表</h2>
     <form method="post" onsubmit="return EnrollmentVerification()">{% csrf_token %}

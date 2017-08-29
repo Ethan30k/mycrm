@@ -163,3 +163,30 @@ def get_admin_actions(admin_obj):
                                                                                           action_name=action_name)
 
     return mark_safe(options)
+
+
+@register.simple_tag
+def get_m2m_avaliable_objs(admin_obj, field_name):
+    """
+    返回m2m左侧所有待选的数据
+    :param admin_obj:
+    :param field_name:
+    :return:
+    """
+    m2m_model = getattr(admin_obj.model, field_name).rel.to
+    m2m_objs = m2m_model.objects.all()
+    return m2m_objs
+
+
+@register.simple_tag
+def get_m2m_chosen_objs(admin_obj, field_name, obj):
+    """
+    返回右侧已选数据
+    :param admin_obj:
+    :param field_name:
+    :param obj:
+    :return:
+    """
+    if obj.id:
+        return getattr(obj, field_name).all()
+    return []

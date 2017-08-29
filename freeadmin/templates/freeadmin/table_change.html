@@ -29,7 +29,33 @@
                 </label>
                 <div class="col-sm-10">
                     <span style="color: red">{{ field.errors }}</span>
-                    {{ field }}
+                    {% if field.name in admin_obj.filter_horizontal %}
+                        {% get_m2m_chosen_objs admin_obj field.name obj_form.instance as m2m_chosen_objs %}
+                        <div class="col-lg-6">
+                            {% get_m2m_avaliable_objs admin_obj field.name as m2m_avaliable_objs %}
+                            <input type="text" oninput="FuzzSearch(this, 'id_{{ field.name }}_from')" class="form-control">
+
+
+                            <select multiple field_name="{{ field.name }}" class="form-control" id="id_{{ field.name }}_from">
+                                {% for obj in m2m_avaliable_objs %}
+                                    {% if obj not in m2m_chosen_objs %}
+                                        <option value="{{ obj.id }}" ondblclick="MoveEleTo(this, 'id_{{ field.name }}_to')">{{ obj }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                        <div class="col-lg-6">
+                            {% get_m2m_chosen_objs admin_obj field.name obj_form.instance as m2m_chosen_objs %}
+                            <select m2m_right="yes" name="{{ field.name }}" multiple field_name="{{ field.name }}" class="form-control" id="id_{{ field.name }}_to">
+                                {% for obj in m2m_chosen_objs %}
+                                    <option value="{{ obj.id }}" ondblclick="MoveEleTo(this, 'id_{{ field.name }}_from')">{{ obj }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
@@ -44,7 +70,42 @@
         function BeforeFormSubmit(form_ele){
             console.log(form_ele);
             $('form input[disabled]').prop("disabled", false);
-{#            return false;#}
+
+            $('select[m2m_right="yes"] option').prop('selected', true);
+        }
+
+
+        function MoveEleTo(from_ele, target_ele_id){
+            //move options from from_ele to target ele
+            var field_name = $(from_ele).parent().attr("field_name");
+            if (target_ele_id.endsWith('_from')){
+                var new_target_id = "id_" + field_name + "_to"
+            }else {
+                var new_target_id = "id_" + field_name + "_from"
+            }
+            var opt_ele = "<option value='" + $(from_ele).val() + "'ondblclick=MoveEleTo(this,'" + new_target_id + "')>"+$(from_ele).text()+"</option>";
+            $("#" + target_ele_id).append(opt_ele);
+
+            $(from_ele).remove();
+
+        }
+
+        function FuzzSearch(ele, select_ele_id){
+            var search_text = $(ele).val();
+            var match_eles = [];
+            $("#" + select_ele_id).children().each(function () {
+                if($(this).text().indexOf(search_text) != -1){
+                    //match_eles.push($(this));
+                    $(this).removeClass("hidden");
+                }else {
+                    $(this).addClass("hidden")
+                }
+            });
+{#            $("#" + select_ele_id).empty();#}
+{#            for (var i in match_eles){#}
+{#                console.log(i)#}
+{#                $("#" + select_ele_id).append(match_eles[i])#}
+{#            }#}
         }
     </script>
 

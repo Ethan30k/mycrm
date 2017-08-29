@@ -16,6 +16,7 @@ class BaseAdmin(object):
     readonly_fields = ()
     default_actions = ["delete_selected"]
     actions = []
+    filter_horizontal = []
 
     def delete_selected(self, request, queryset):
         print("going to delete")
